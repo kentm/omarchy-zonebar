@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "stbeck11.zonebar",
+  "name": "Zonebar",
+  "version": "1.0.0",
+  "author": "Scott Beck",
+  "license": "MIT",
+  "description": "The time everywhere you care about, one click from the bar. Relative offsets, day boundaries, and a slider to scrub the whole world forward and back.",
+  "homepage": "https://github.com/stbeck11/omarchy-zonebar",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Zonebar",
+    "description": "Every timezone you care about, with offsets relative to you",
+    "category": "Time",
+    "aliases": [
+      "zonebar",
+      "timezones",
+      "zones"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "center",
+    "defaults": {
+      "zones": "America/Los_Angeles=Pacific,America/New_York=Eastern,Europe/London=London,Asia/Dubai=Dubai,Asia/Kolkata=Mumbai,Asia/Singapore=Singapore",
+      "homeZone": "",
+      "hour12": false,
+      "barDisplay": "Icon",
+      "barZone": ""
+    },
+    "schema": [
+      {
+        "key": "zones",
+        "type": "string",
+        "label": "Zones",
+        "defaultValue": "America/Los_Angeles=Pacific,America/New_York=Eastern,Europe/London=London,Asia/Dubai=Dubai,Asia/Kolkata=Mumbai,Asia/Singapore=Singapore",
+        "description": "Comma-separated IANA zone names, in the order they appear in the panel. Add '=Label' to any of them to show a name you actually use: 'America/Los_Angeles=Pacific' reads better in a narrow panel than the full identifier. Adding, removing and reordering from inside the panel writes back here, so you only need to edit this by hand if you want to."
+      },
+      {
+        "key": "homeZone",
+        "type": "string",
+        "label": "Home zone",
+        "defaultValue": "",
+        "description": "The zone every offset is measured from. Leave it blank to use whatever this machine's clock is set to, which is almost always what you want. Set it when you are travelling but still think in the timezone you left."
+      },
+      {
+        "key": "hour12",
+        "type": "boolean",
+        "label": "12-hour clock",
+        "defaultValue": false,
+        "description": "Show times as 3:05 pm rather than 15:05. Affects the panel and the bar together."
+      },
+      {
+        "key": "barDisplay",
+        "type": "enum",
+        "label": "In the bar",
+        "options": [
+          "Icon",
+          "Icon and time",
+          "Time"
+        ],
+        "defaultValue": "Icon",
+        "description": "How much the widget occupies before you click it. Icon is a single glyph and stays out of the way, which suits a bar that already has a clock on it. The other two put one zone's time on the bar itself, for the zone you check most."
+      },
+      {
+        "key": "barZone",
+        "type": "string",
+        "label": "Zone shown in the bar",
+        "defaultValue": "",
+        "description": "Which zone's time appears in the bar when the display above includes one. Blank uses the first zone in your list."
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Report the current UTC offset of each named timezone, one per line, as
+# "<zone><TAB><+HHMM>".
+#
+# Why this exists rather than doing it in QML: the panel needs offsets that are
+# correct through daylight saving, half-hour zones and whatever the tzdata
+# maintainers decided this year. The operating system already knows all of
+# that, so the widget asks it instead of carrying its own table.
+#
+# Why each zone is validated first: `TZ=Nonsense/Place date +%z` prints +0000
+# without complaint. Taken at face value that renders an invented time with
+# total confidence, which is the one failure a clock must not have. A zone with
+# no file in the database is therefore reported as "?" and the panel shows it
+# as unresolved.
+#
+# Usage:
+#   zonebar-offsets Europe/London Asia/Dubai     offsets for those zones
+#   zonebar-offsets --list                       every zone this system knows
+
+set -u
+
+ZONEINFO=${ZONEBAR_ZONEINFO:-/usr/share/zoneinfo}
+
+if [[ ${1:-} == "--list" ]]; then
+  # timedatectl is the tidy answer, but it is not always present and is not
+  # worth a hard dependency for a picker, so fall back to walking the database.
+  if command -v timedatectl >/dev/null 2>&1 && timedatectl list-timezones >/dev/null 2>&1; then
+    timedatectl list-timezones
+  else
+    find "$ZONEINFO" -type f -printf '%P\n' 2>/dev/null |
+      grep -E '^[A-Z][A-Za-z_+-]*/' |
+      grep -vE '^(posix|right)/' |
+      sort
+  fi
+  exit 0
+fi
+
+if (($# == 0)); then
+  echo "usage: zonebar-offsets <zone>... | --list" >&2
+  exit 2
+fi
+
+for zone in "$@"; do
+  # Reject anything that is not a plain zone name before it reaches TZ, so a
+  # crafted entry in the config cannot walk out of the database directory.
+  if [[ ! $zone =~ ^[A-Za-z0-9_+-]+(/[A-Za-z0-9_+-]+)*$ || $zone == *..* ]]; then
+    printf '%s\t?\n' "$zone"
+    continue
+  fi
+  if [[ ! -f $ZONEINFO/$zone ]]; then
+    printf '%s\t?\n' "$zone"
+    continue
+  fi
+  offset=$(TZ="$zone" date +%z 2>/dev/null)
+  if [[ $offset =~ ^[+-][0-9]{4}$ ]]; then
+    printf '%s\t%s\n' "$zone" "$offset"
+  else
+    printf '%s\t?\n' "$zone"
+  fi
+done
