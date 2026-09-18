@@ -22,8 +22,9 @@ time, how far that is from you, and whether it is a reasonable hour there.
   twelve hours either way. The header shows the selected time in your home
   timezone, so you can slide straight to 12:30 pm at home and read the other
   zones without adding an offset yourself. It follows your 12/24-hour setting,
-  even if your home zone is not in the list. Right-click the slider, or press
-  **Now**, to return to the live time, marked `now` in the header.
+  even if your home zone is not in the list. Scrubbed times are explicitly
+  marked `selected` and dimmed. Right-click the slider, or press **Now**, to
+  return to the brighter live time, marked `now` in the header.
 - **Type a time on any row.** Click a row, type `3pm` or `15:00` or `1500`, and
   everything else re-reads for that moment.
 - **Add, remove, reorder.** Changes are written back to your shell config, so

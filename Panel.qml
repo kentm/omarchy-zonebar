@@ -200,10 +200,10 @@ Panel {
               textFormat: Text.PlainText
               anchors.verticalCenter: parent.verticalCenter
               // Show the selected home time so the slider can be aimed at a
-              // clock time directly. Keep "now" as the live-clock indicator.
-              text: root.homeTime + (root.scrubbed ? "" : " · now")
+              // clock time directly. Explicitly distinguish selected and live times.
+              text: root.homeTime + (root.scrubbed ? " · selected" : " · now")
               color: root.bar ? root.bar.foreground : Color.foreground
-              opacity: root.scrubbed ? 1.0 : 0.6
+              opacity: root.scrubbed ? 0.6 : 1.0
               font.family: root.bar ? root.bar.fontFamily : undefined
               font.pixelSize: Style.font.body
             }
